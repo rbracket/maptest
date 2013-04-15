@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Oregon Walks GIS Jam Inventory App</title>
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" /> <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no" /-->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="description" content="An app for use by the Oregon Walks GIS Jam group and volunteers for a curb ramp inventory in Portland, OR."/>
+        <meta name="author" content="katie" />
+
+        <!--css links-->
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" type="text/css"/> <!--<link rel="stylesheet" href="jquery.mobile-1.2.0.css" type="text/css"/>-->
+        <link rel="stylesheet" href="css/style.mobile.css" type="text/css"/>
+        <link rel="stylesheet" href="css/style.mobile-jq.css" type="text/css"/>
+
+        <!--jQuery links-->
+        <script src="jquery/jquery-1.6.4.js"></script>
+        <script src="jquery/jquery.mobile-1.2.0.js"></script> <!--<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>-->
+        <script src="OpenLayers/OpenLayers.js"></script> <!--script src="OpenLayers/OpenLayers.mobile.js"></script-->
+        <script src="mobile-base.js"></script>
+        <script src="mobile-jq.js"></script>
+    </head>
+
+    <body>
+        <div id="mappage" data-role="page">
+          <div data-role="content">
+            <div id="map"></div>
+          </div>
+          <div data-role="footer">
+            <a href="#" id="locate" data-icon="locate" data-role="button">locate</a>
+          </div>
+          <div id="navigation" data-role="controlgroup" data-type="vertical">
+            <a href="#" data-role="button" data-icon="plus" id="plus" data-iconpos="notext"></a>
+            <a href="#" data-role="button" data-icon="minus" id="minus" data-iconpos="notext"></a>
+          </div>
+        </div>
+	</body>
+</html>
+  
