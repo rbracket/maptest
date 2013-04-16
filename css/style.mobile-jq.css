@@ -21,10 +21,19 @@ body {
     width: 100%;
     height: 100%;
 }
+<!-- #intersectionpage, .ui-content, #i_map {
+    width: 100%;
+    height: 300px;
+} -->
+
 #intersectionpage, .ui-content, #i_map {
     width: 100%;
-    height: 200px;
+    height:60%;
+    min-height: 300px;
+    text-align: center;
+    font-weight: bold;
 }
+
 .olControlAttribution {
     font-size: 10px;
     bottom: 5px;
@@ -40,6 +49,10 @@ body {
     display: block;
     padding: 7px 6px 7px 8px;
 }
+
+#street{
+	position: relative;
+	}
 
 #title, #tags, #shortdesc {
     display: none;
