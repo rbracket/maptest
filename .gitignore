@@ -1,0 +1,6 @@
+
+# Aptana and vi files
+\*$.~
+.classpath
+.project
+.metadata
