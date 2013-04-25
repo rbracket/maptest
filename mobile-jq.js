@@ -12,12 +12,6 @@ jQuery(document).ready(function() {
         if (control.active) {control.getCurrentLocation();} else {control.activate();}
     });
 
-
-/* live() is depricated as of 1.7
- * exactly match $("a.foo").live("click", fn)
- *                 $(document).on("click", "a.foo", fn)
- */
-	// jQuery('#intersectionpage').live('pageshow',function(event, ui) {if (null == i_map) {initDetailMap()};});
 	jQuery (document).on('pageshow','#intersectionpage',
 			function(event, ui) {if (null == i_map) {initDetailMap()};}
 	        )
@@ -26,12 +20,12 @@ jQuery(document).ready(function() {
 		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
-	jQuery("#sortOf").click(function() {
+	jQuery(".sortOf").click(function() {
 		rampAttrs.features[currentRamp].attributes.state = "sort_of"; 
 		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
-	jQuery("#no").click(function() {
+	jQuery("#notGood").click(function() {
 		rampAttrs.features[currentRamp].attributes.state = "no ramp"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
