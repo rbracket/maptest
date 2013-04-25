@@ -9,7 +9,12 @@ var sm = new OpenLayers.Projection("EPSG:900913");
 var geoJSONparser = new OpenLayers.Format.GeoJSON({ignoreExtraDims: true});
 
 var intersectionStyleMap = new OpenLayers.StyleMap({pointRadius: 7}); 
-var intersectionLookup = {"y": {fillColor: "orange", graphicName: "triangle", pointRadius: 8}, "n": {fillColor: "blue"}};
+
+var intersectionLookup = {
+	"y": {fillColor: "orange", graphicName: "triangle",	pointRadius: 8},
+	"n": {fillColor: "blue"}
+	};
+		
 intersectionStyleMap.addUniqueValueRules("default", "evaluated", intersectionLookup); //evaluated is attribute of intersections
 
 var rampStyleMap = new OpenLayers.StyleMap({display: "none"});
@@ -18,9 +23,29 @@ var hiLiteStyleMap = new OpenLayers.StyleMap({strokeWidth: 12});
 var hiLiteLookup = {0: {display: "none"}, 1: {strokeColor: "cyan"}};
 hiLiteStyleMap.addUniqueValueRules("default", "activeOne", hiLiteLookup); //active is attribute of hiLite
 
-var stateStyleMap = new OpenLayers.StyleMap({strokeWidth: 6, strokeColor: "white"});
-var stateLookup = {"none": {strokeColor: "white"}, "yes": {strokeColor: "green"}, "sort_of": {strokeColor: "yellow"}, "no": {strokeColor: "red"}};
-stateStyleMap.addUniqueValueRules("default", "state", stateLookup); //state is attribute of rampAttrs
+
+var stateStyleMap = new OpenLayers.StyleMap({
+	strokeWidth : 6,
+	strokeColor : "white"
+}); 
+
+var stateLookup = {
+	"none" : {
+		strokeColor : "white"
+	},
+	"yes" : {
+		strokeColor : "green"
+	},
+	"sort_of" : {
+		strokeColor : "yellow"
+	},
+	"no" : {
+		strokeColor : "red"
+	}
+};
+
+stateStyleMap.addUniqueValueRules("default", "state", stateLookup);
+//state is attribute of rampAttrs
 
 var areaMapStrategy;
 var detailMapStrategy;
@@ -93,7 +118,9 @@ function initAreaMap() {
         numZoomLevels: 18,
         controls: [
             new OpenLayers.Control.Attribution(),
-            new OpenLayers.Control.TouchNavigation({dragPanOptions: {enableKinetic: true}}),
+            new OpenLayers.Control.TouchNavigation({
+            	dragPanOptions: {
+            		enableKinetic: true}}),
             geolocate,
             selectControl
         ],
@@ -107,16 +134,29 @@ function initAreaMap() {
     });
 
     /*geolocation stuff*/
-    var style = {fillOpacity: 0.1,fillColor: '#000',strokeColor: '#f00',strokeOpacity: 0.6};
-    geolocate.events.register("locationupdated", this, function(e) {
-        vector.removeAllFeatures();
-        vector.addFeatures([ //after geolocates, draws a location range on the map
-            new OpenLayers.Feature.Vector(e.point,{},{graphicName: 'cross',strokeColor: '#f00',strokeWidth: 2,fillOpacity: 0,pointRadius: 10}),
-            new OpenLayers.Feature.Vector(OpenLayers.Geometry.Polygon.createRegularPolygon(new OpenLayers.Geometry.Point(e.point.x, e.point.y),e.position.coords.accuracy / 2,50,0),{},style)
-        ]);
-        map.zoomToExtent(vector.getDataExtent());
-    });
-};
+
+	var style = {
+		fillOpacity : 0.1,
+		fillColor : '#000',
+		strokeColor : '#f00',
+		strokeOpacity : 0.6
+	}; 
+
+
+	geolocate.events.register("locationupdated", this, function(e) {
+		vector.removeAllFeatures();
+		vector.addFeatures([//after geolocates, draws a location range on the map
+		new OpenLayers.Feature.Vector(e.point, {}, {
+			graphicName : 'cross',
+			strokeColor : '#f00',
+			strokeWidth : 2,
+			fillOpacity : 0,
+			pointRadius : 10
+		}), new OpenLayers.Feature.Vector(OpenLayers.Geometry.Polygon.createRegularPolygon(new OpenLayers.Geometry.Point(e.point.x, e.point.y), e.position.coords.accuracy / 2, 50, 0), {}, style)]);
+		map.zoomToExtent(vector.getDataExtent());
+	});
+	};
+
 
 /* load intersection detail page */
 function initDetailMap() {

@@ -22,15 +22,17 @@ jQuery(document).ready(function() {
 			function(event, ui) {if (null == i_map) {initDetailMap()};}
 	        )
 	jQuery("#yes").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "yes"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+		rampAttrs.features[currentRamp].attributes.state = "yes"; 
+		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
 	jQuery("#sortOf").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "sort_of"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+		rampAttrs.features[currentRamp].attributes.state = "sort_of"; 
+		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
 	jQuery("#no").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "no"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+		rampAttrs.features[currentRamp].attributes.state = "no ramp"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
 	jQuery("#skip").click(function() {moveCW();});
@@ -47,7 +49,8 @@ jQuery(document).ready(function() {
 		var aFeature
 		for (f in rampAttrs.features) {
 			aFeature = rampAttrs.features[f];
-			aFeature.attributes.state = "none"; rampAttrs.drawFeature(aFeature);
+			aFeature.attributes.state = "none"; 
+			rampAttrs.drawFeature(aFeature);
 		};
 	});
 	jQuery("#save").click(function(){
