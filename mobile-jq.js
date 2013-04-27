@@ -25,8 +25,8 @@ jQuery(document).ready(function() {
 		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
-	jQuery("#notGood").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "no ramp"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+	jQuery("#no").click(function() {
+		rampAttrs.features[currentRamp].attributes.state = "no"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
 	jQuery("#skip").click(function() {moveCW();});
