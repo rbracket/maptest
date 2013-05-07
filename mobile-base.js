@@ -1,6 +1,8 @@
 // Start here
-var apiKey = "AgQjrXIE9CdYspY6xDjYHhAlbPODFqfQdzmhnT2Ny2l5bpNvHC-0QdJFR-V-eZ6w";  // Katie's Bing API key. 
+var apiKey = "Ao5Ew1XnxVey8Mh0jgfL32mbQN1pNLQoDv48u1r5BJrGsf8r0Bach7FYO5wTpbHl";  // My Bing API key. Please get your own at http://bingmapsportal.com/ and use that instead.
 
+var buttonsHeight;
+var i_mapArea;
 
 var map;
 var i_map;
@@ -10,12 +12,7 @@ var sm = new OpenLayers.Projection("EPSG:900913");
 var geoJSONparser = new OpenLayers.Format.GeoJSON({ignoreExtraDims: true});
 
 var intersectionStyleMap = new OpenLayers.StyleMap({pointRadius: 7}); 
-
-var intersectionLookup = {
-	"y": {fillColor: "orange", graphicName: "triangle",	pointRadius: 8},
-	"n": {fillColor: "blue"}
-	};
-		
+var intersectionLookup = {"y": {fillColor: "orange", graphicName: "triangle"},"n": {fillColor: "blue"}};
 intersectionStyleMap.addUniqueValueRules("default", "evaluated", intersectionLookup); //evaluated is attribute of intersections
 
 var rampStyleMap = new OpenLayers.StyleMap({display: "none"});
@@ -24,29 +21,9 @@ var hiLiteStyleMap = new OpenLayers.StyleMap({strokeWidth: 12});
 var hiLiteLookup = {0: {display: "none"}, 1: {strokeColor: "cyan"}};
 hiLiteStyleMap.addUniqueValueRules("default", "activeOne", hiLiteLookup); //active is attribute of hiLite
 
-
-var stateStyleMap = new OpenLayers.StyleMap({
-	strokeWidth : 6,
-	strokeColor : "white"
-}); 
-
-var stateLookup = {
-	"none" : {
-		strokeColor : "white"
-	},
-	"yes" : {
-		strokeColor : "green"
-	},
-	"sort_of" : {
-		strokeColor : "yellow"
-	},
-	"no" : {
-		strokeColor : "red"
-	}
-};
-
-stateStyleMap.addUniqueValueRules("default", "state", stateLookup);
-//state is attribute of rampAttrs
+var stateStyleMap = new OpenLayers.StyleMap({strokeWidth: 6, strokeColor: "white"});
+var stateLookup = {"none": {strokeColor: "white"}, "yes": {strokeColor: "green"}, "sort_of": {strokeColor: "yellow"}, "no": {strokeColor: "red"}};
+stateStyleMap.addUniqueValueRules("default", "state", stateLookup); //state is attribute of rampAttrs
 
 var areaMapStrategy;
 var detailMapStrategy;
@@ -55,36 +32,26 @@ var detailProtocol;
 
 var intersectionID; 
 var currentRamp;
-var corners;
 var hiLite;
 var rampAttrs;
 
-function fixContentHeight() {
-    var footer = jQuery("div[data-role='footer']:visible"),
-        content = jQuery("div[data-role='content']:visible:visible"),
-        viewHeight = jQuery(window).height(),
-        contentHeight = viewHeight - footer.outerHeight();
-
-    if ((content.outerHeight() + footer.outerHeight()) !== viewHeight) {
-        contentHeight -= (content.outerHeight() - content.height() + 1);
-        content.height(contentHeight);
-    };
-
-    if (window.map && window.map instanceof OpenLayers.Map) {
-		map.updateSize();}
-	else {
-		initAreaMap();
-	};
+function setSize() {
+	buttonsHeight = jQuery("div[id='buttons']:visible").height();
+	if (buttonsHeight){
+		i_mapArea = jQuery("div[id='i_map']:visible");
+		if (i_mapArea.height() + buttonsHeight !== jQuery(window).height()) {
+			i_mapArea.height(jQuery(window).height() - buttonsHeight);
+		};
+	}
+    if (window.map && window.map instanceof OpenLayers.Map) {map.updateSize();};
 }
 
 /* initialize area map page */
 function initAreaMap() {
-    var vector = new OpenLayers.Layer.Vector("Location range", {});
-
 	areaMapStrategy = new OpenLayers.Strategy.Refresh({interval: 60000, force: true})
     var intersections = new OpenLayers.Layer.Vector("intersections", {
         projection: wgs,
-        strategies: [new OpenLayers.Strategy.BBOX(),areaMapStrategy],
+        strategies: [new OpenLayers.Strategy.BBOX(), areaMapStrategy],
         protocol: new OpenLayers.Protocol.Script({
 			url: "http://scottparker.cartodb.com/api/v2/sql",
             params: {q: "select * from intersections", format: "geojson"},
@@ -98,70 +65,46 @@ function initAreaMap() {
         autoActivate:true,
         onSelect: function(feature) {
 			intersectionID = feature.attributes["node_id"];
-			if (i_map) {
-				ramps.protocol.params.q = "select * from ramps where nodeid = "+intersectionID+ " order by bearing asc,down_ramp asc";
-				detailMapStrategy.refresh({force: true});
-			};
 			this.unselectAll();
-			jQuery.mobile.changePage("#intersectionpage"); 
+			jQuery.mobile.changePage("#intersectionpage");
         }
 	});
 
+    var locate = new OpenLayers.Layer.Vector("Location range", {});
     var geolocate = new OpenLayers.Control.Geolocate({
         id: 'locate-control',
         geolocationOptions: {enableHighAccuracy: true,maximumAge: 0,timeout: 7000}
     });
 
-    map = new OpenLayers.Map({ // create map
+    geolocate.events.register("locationupdated", this, function(e) {
+        locate.removeAllFeatures();
+        locate.addFeatures([new OpenLayers.Feature.Vector(e.point,{},{graphicName: 'cross',strokeColor: '#f00',strokeWidth: 2,fillOpacity: 0,pointRadius: 10})]);
+        map.zoomToExtent(locate.getDataExtent());
+    });
+
+    map = new OpenLayers.Map({
         div: "map",
         theme: null,
         projection: wgs,
         numZoomLevels: 18,
         controls: [
             new OpenLayers.Control.Attribution(),
-            new OpenLayers.Control.TouchNavigation({
-            	dragPanOptions: {
-            		enableKinetic: true}}),
+            new OpenLayers.Control.TouchNavigation({dragPanOptions: {enableKinetic: true}}),
             geolocate,
             selectControl
         ],
         layers: [
             new OpenLayers.Layer.OSM("OpenStreetMap", null, {transitionEffect: 'resize'}),
-            vector, //the geolocation display
+            locate,
             intersections
         ],
         center: new OpenLayers.LonLat(-13654000, 5705400),
-        zoom:18
+        zoom:17
     });
+};
 
-    /*geolocation stuff*/
-
-	var style = {
-		fillOpacity : 0.1,
-		fillColor : '#000',
-		strokeColor : '#f00',
-		strokeOpacity : 0.6
-	}; 
-
-
-	geolocate.events.register("locationupdated", this, function(e) {
-		vector.removeAllFeatures();
-		vector.addFeatures([//after geolocates, draws a location range on the map
-		new OpenLayers.Feature.Vector(e.point, {}, {
-			graphicName : 'cross',
-			strokeColor : '#f00',
-			strokeWidth : 2,
-			fillOpacity : 0,
-			pointRadius : 10
-		}), new OpenLayers.Feature.Vector(OpenLayers.Geometry.Polygon.createRegularPolygon(new OpenLayers.Geometry.Point(e.point.x, e.point.y), e.position.coords.accuracy / 2, 50, 0), {}, style)]);
-		map.zoomToExtent(vector.getDataExtent());
-	});
-	};
-
-
-/* load intersection detail page */
+/* initialize intersection detail page */
 function initDetailMap() {
-
 	detailMapStrategy = new OpenLayers.Strategy.Refresh();
 
 	hiLite = new OpenLayers.Layer.Vector("hiLite",{styleMap: hiLiteStyleMap});
@@ -169,7 +112,7 @@ function initDetailMap() {
 
 	ramps = new OpenLayers.Layer.Vector("ramps", {
         projection: wgs,
-		strategies: [new OpenLayers.Strategy.Fixed(),detailMapStrategy],
+		strategies: [new OpenLayers.Strategy.Fixed(), detailMapStrategy],
 		protocol: new OpenLayers.Protocol.Script({
 			url: "http://scottparker.cartodb.com/api/v2/sql",
 			params: {q: "select * from ramps where nodeid = "+intersectionID+ " order by bearing asc, down_ramp asc", format: "geojson"},
@@ -179,7 +122,7 @@ function initDetailMap() {
         styleMap: rampStyleMap,
         eventListeners: {
 			"featuresadded": function() {
-				this.map.zoomToExtent(this.getDataExtent())
+				this.map.zoomToExtent(this.getDataExtent());
 				hiLite.removeAllFeatures();
 				rampAttrs.removeAllFeatures();
 				var attributes;
@@ -249,3 +192,20 @@ var moveCW = function() {
             //externalGraphic: "../img/marker.png"
             }
         }); */
+
+/*function fixContentHeight() {
+    var footer = jQuery("div[data-role='footer']:visible"),
+        content = jQuery("div[data-role='content']:visible:visible"),
+        viewHeight = jQuery(window).height(),
+        contentHeight = viewHeight - footer.outerHeight();
+
+    if ((content.outerHeight() + footer.outerHeight()) !== viewHeight) {
+        contentHeight -= (content.outerHeight() - content.height() + 1);
+        content.height(contentHeight);
+    };
+
+    if (window.map && window.map instanceof OpenLayers.Map) {
+		map.updateSize();}
+	else {
+		initAreaMap();
+	}; */
