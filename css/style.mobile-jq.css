@@ -1,79 +1,88 @@
 html ,
+#mappage, #mappage .ui-content, #map {
+    width: 100%;
+    height: 100%;
+}
+#intersectionpage, #intersectionpage .ui-content {
+	width:100%;
+	height:100%;
+}
+#navigation {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    z-index: 1000;
+}
+#navigation .ui-btn-icon-notext {
+    display: block;
+    padding: 3px 3px 3px 3px;
+}
+#title, #tags, #shortdesc {
+    display: none;
+}
+#aNote {
+	color: cyan;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 1000;
+}
+#street {
+	font-weight: bold;
+}
+#OK {
+	margin: 20px;
+}
+#chktxt{
+	padding 20px;
+}
 body {
     margin: 0;
     padding: 0;
     height: 100%;
 }
-
 .ui-content {
     padding: 0;
 }
-.ui-footer {
-    text-align: center;
-    padding: 5px 0;
+.ui-btn {
+	margin: 0;
+	padding: 0;
+}
+.cbx {
+	font-weight: normal;
+}
+.tbl {
+	margin: 0;
+	padding: 0;
 }
 .portrait, .portrait #mappage {
     min-height: 0;
 }
-/*.portrait, .portrait .ui-page{*/
-    /*min-height: 0;*/
-/*}*/
-
-.ui-btn  {
-	background-color: red;
-
-}
-#mappage, #mappage .ui-content, #map {
-    width: 100%;
-    height: 100%;
-}
-/* #intersectionpage, .ui-content, #i_map {
-    width: 100%;
-    height: 300px;
-*/
-
-#intersectionpage, .ui-content, #i_map {
-    width: 100%;
-    height: 60%;
-}
-
 .olControlAttribution {
-    font-size: 10px;
-    bottom: 5px;
-    right: 5px;
-}
-
-#navigation {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
-}
-
-#navigation .ui-btn-icon-notext {
-    display: block;
-    padding: 5px 5px 5px 5px;
-}
-
-#street, #crossing{
-	position: relative;
-	color: green;
-	font-weight: bold;
-	font-family:serif;
-	font-size:1.2em;
-	text-align: center;
-	padding-bottom: .1em;
-	padding-top: .4em; 
-	}
-
-#title, #tags, #shortdesc {
-    display: none;
+    font-size: 8px;
+    bottom: 2px;
+    right: 2px;
 }
 .ui-icon-check {
     opacity: 0.3;
 }
 .checked .ui-icon-check {
     opacity: 1;
+}
+
+
+
+
+/*
+.portrait, .portrait .ui-page{
+    min-height: 0;
+}
+.ui-footer {
+    text-align: center;
+    padding: 5px 0;
+}
+#details-list li{
+	padding:15px 10px;
 }
 .ui-icon-locate {
     background-image: url(img/locate.png);
@@ -87,6 +96,4 @@ body {
 .ui-content .ui-listview {
     margin: 0;
 }
-#details-list li{
-	padding:15px 10px;
-}
+*/
