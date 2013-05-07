@@ -2,27 +2,34 @@
 
 jQuery(document).ready(function() {
 	window.location.replace(window.location.href.split("#")[0] + "#mappage");
-    jQuery(window).bind("orientationchange resize pageshow", fixContentHeight);
-    document.body.onload = fixContentHeight;
+    jQuery(window).bind("orientationchange resize", setSize);
+    document.body.onload = initAreaMap;
+
+	jQuery("#mappage").on("pageshow", function(event, ui) {if (window.map && window.map instanceof OpenLayers.Map) {map.updateSize();};});
 
     jQuery("#plus").click(function(){map.zoomIn();});
     jQuery("#minus").click(function(){map.zoomOut();});
     jQuery("#locate").click(function(){
         var control = map.getControlsBy("id", "locate-control")[0];
-        if (control.active) {control.getCurrentLocation();} else {control.activate();}
+        if (control.active) {control.getCurrentLocation();} else {control.activate();};
     });
 
-	jQuery (document).on('pageshow','#intersectionpage',
-			function(event, ui) {if (null == i_map) {initDetailMap()};}
-	        )
+	jQuery("#intersectionpage").on("pageshow", function(event, ui) {
+		setSize();
+		if (null == i_map) {
+			initDetailMap();}
+		else {
+			ramps.protocol.params.q = "select * from ramps where nodeid = "+intersectionID+ " order by bearing asc, down_ramp asc";
+			detailMapStrategy.refresh({force: true});
+		};
+	});
+
 	jQuery("#yes").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "yes"; 
-		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+		rampAttrs.features[currentRamp].attributes.state = "yes"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
-	jQuery(".sortOf").click(function() {
-		rampAttrs.features[currentRamp].attributes.state = "sort_of"; 
-		rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
+	jQuery("#sortOf").click(function() {
+		rampAttrs.features[currentRamp].attributes.state = "sort_of"; rampAttrs.drawFeature(rampAttrs.features[currentRamp]);
 		moveCW();
 	});
 	jQuery("#no").click(function() {
@@ -43,8 +50,7 @@ jQuery(document).ready(function() {
 		var aFeature
 		for (f in rampAttrs.features) {
 			aFeature = rampAttrs.features[f];
-			aFeature.attributes.state = "none"; 
-			rampAttrs.drawFeature(aFeature);
+			aFeature.attributes.state = "none"; rampAttrs.drawFeature(aFeature);
 		};
 	});
 	jQuery("#save").click(function(){
