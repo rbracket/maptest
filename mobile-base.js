@@ -11,7 +11,7 @@ var wgs = new OpenLayers.Projection("EPSG:4326");
 var sm = new OpenLayers.Projection("EPSG:900913");
 var geoJSONparser = new OpenLayers.Format.GeoJSON({ignoreExtraDims: true});
 
-var intersectionStyleMap = new OpenLayers.StyleMap({pointRadius: 7}); 
+var intersectionStyleMap = new OpenLayers.StyleMap({pointRadius: 12}); 
 var intersectionLookup = {"y": {fillColor: "orange", graphicName: "triangle"},"n": {fillColor: "blue"}};
 intersectionStyleMap.addUniqueValueRules("default", "evaluated", intersectionLookup); //evaluated is attribute of intersections
 
